@@ -1,4 +1,11 @@
 #!/usr/bin/env python2
+"""
+pymv is currently built on top of python "rope" library. However, rope has been determined to be an abandoned project
+that is especially weak at Python3 support. pymv in its current state is therefore just a weak POC. The suggestion next
+step for this project is to upgrade it to use the maintained python parser pybaron and re-implement all the move logic
+from Rope.
+"""
+
 import os
 import sys
 import argparse
@@ -10,6 +17,34 @@ from rope.base import libutils
 from rope.refactor.move import MoveModule
 
 
+class ExtraMoveChanges(object):
+    """
+    ExtraMoveChanges is all the hack code to extend past rope's weaknesses when doing a move without editing rope too
+    much. It is not a proper rope.base.change.ChangeSet, just vaguely follows some of the rope changeset conventions.
+    """
+
+    def __init__(self, new_resource):
+        desired_dir = os.path.dirname(new_resource.real_path)
+        if os.path.exists(desired_dir):
+            self._dir_to_create = None
+        else:
+            self._dir_to_create = desired_dir
+
+    def get_description(self):
+        if self._dir_to_create:
+            return '\ncreate directory {}\n'.format(os.path.relpath(self._dir_to_create))
+        return ''
+
+    def execute(self):
+        if self._dir_to_create:
+            os.makedirs(self._dir_to_create)
+
+
+
+def get_extra_changes(new_resource):
+    return ExtraMoveChanges(new_resource)
+
+
 def move(project_dir, src, dest, dry_run=False):
     project = rope.base.project.Project(project_dir)
     resource = libutils.path_to_resource(project, src)
@@ -17,11 +52,14 @@ def move(project_dir, src, dest, dry_run=False):
 
     mover = MoveModule(project, resource)
 
-    changeset = mover.get_changes(resource2)
+    rope_changeset = mover.get_changes(resource2)
+    extra_changeset = get_extra_changes(resource2)
     if dry_run:
-        print(str(changeset.get_description()))
+        print(str(rope_changeset.get_description()))
+        print(str(extra_changeset.get_description()))
     else:
-        project.do(changeset)
+        extra_changeset.execute()
+        project.do(rope_changeset)
 
 
 def main():
