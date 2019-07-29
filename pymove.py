@@ -10,11 +10,8 @@ from rope.base import libutils
 from rope.refactor.move import MoveModule
 
 
-PROJECT_DIR = '.'
-
-
-def move(project, src, dest, dry_run=False):
-    project = rope.base.project.Project(PROJECT_DIR)
+def move(project_dir, src, dest, dry_run=False):
+    project = rope.base.project.Project(project_dir)
     resource = libutils.path_to_resource(project, src)
     resource2 = libutils.path_to_resource(project, dest, type='folder' if resource.is_folder() else 'file')
 
@@ -33,13 +30,18 @@ def main():
     arg_parser.add_argument('source_path', type=str)
     arg_parser.add_argument('destination_path', type=str)
     arg_parser.add_argument('--dry-run', action='store_true', dest='dry_run')
+    arg_parser.add_argument('--project-root-directory', type=str, default='.', dest='project_dir',
+                            help='Root directory of the python project in which the files are being moved. This defines'
+                                 ' the scope for which to search for affected import statements.')
     args = arg_parser.parse_args(sys.argv[1:])
 
-    # project_dir = os.path.abspath(PROJECT_DIR)
-    # source_path = os.path.join(PROJECT_DIR, args.source_path)
-    # destination_path = os.path.join(PROJECT_DIR, args.destination_path)
+    if args.project_dir != '.':
+        raise NotImplementedError('Support for a --project-root-directory other than the current working directory '
+                                  '(specified as ".") is pending.')
+        # Something doesn't work correctly with a different root directory, no idea why. It's not relative to the other
+        # path arguments.
 
-    move(PROJECT_DIR, args.source_path, args.destination_path, dry_run=args.dry_run)
+    move(args.project_dir, args.source_path, args.destination_path, dry_run=args.dry_run)
 
 
 if __name__ == '__main__':
