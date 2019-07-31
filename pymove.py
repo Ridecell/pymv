@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), 'ro
 
 import rope.base.project
 from rope.base import libutils
-from rope.refactor.move import MoveModule
+from rope.refactor.move import MoveModule, create_move
 
 
 class ExtraMoveChanges(object):
@@ -45,12 +45,16 @@ def get_extra_changes(new_resource):
     return ExtraMoveChanges(new_resource)
 
 
-def move(project_dir, src, dest, dry_run=False):
+def move(project_dir, src, dest, scoped_name=None, dry_run=False):
     project = rope.base.project.Project(project_dir)
     resource = libutils.path_to_resource(project, src)
     resource2 = libutils.path_to_resource(project, dest, type='folder' if resource.is_folder() else 'file')
 
-    mover = MoveModule(project, resource)
+    if scoped_name:
+        offset = resource.read().index('%s' % scoped_name)
+        mover = create_move(project, resource, offset)  # Uses GlobalMove
+    else:
+        mover = MoveModule(project, resource)
 
     rope_changeset = mover.get_changes(resource2)
     extra_changeset = get_extra_changes(resource2)
@@ -67,6 +71,10 @@ def main():
                                                      'statements in dependent files.')
     arg_parser.add_argument('source_path', type=str)
     arg_parser.add_argument('destination_path', type=str)
+    arg_parser.add_argument('scoped_global_variable', type=str, nargs='?', default=None,
+                            help='Provide a Global variable/class/function name in source file to move to destination.'
+                                 ' Allows for greater granularity when moving overscoped modules that need to be split '
+                                 'into 2 (or more) modules')
     arg_parser.add_argument('--dry-run', action='store_true', dest='dry_run')
     arg_parser.add_argument('--project-root-directory', type=str, default='.', dest='project_dir',
                             help='Root directory of the python project in which the files are being moved. This defines'
@@ -79,7 +87,8 @@ def main():
         # Something doesn't work correctly with a different root directory, no idea why. It's not relative to the other
         # path arguments.
 
-    move(args.project_dir, args.source_path, args.destination_path, dry_run=args.dry_run)
+    move(args.project_dir, args.source_path, args.destination_path, scoped_name=args.scoped_global_variable,
+         dry_run=args.dry_run)
 
 
 if __name__ == '__main__':
