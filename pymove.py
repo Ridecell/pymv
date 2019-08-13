@@ -51,8 +51,20 @@ def move(project_dir, src, dest, scoped_name=None, dry_run=False):
     resource2 = libutils.path_to_resource(project, dest, type='folder' if resource.is_folder() else 'file')
 
     if scoped_name:
+        if resource.is_folder():
+            raise RuntimeError('If global scoped provided, resource must be a file')
         offset = resource.read().index('%s' % scoped_name)
-        mover = create_move(project, resource, offset)  # Uses GlobalMove
+        if not resource2.exists():
+            stack = []
+            parent = resource2.parent
+            while not parent.exists():
+                stack.insert(0, parent)
+                parent = parent.parent
+            for s in stack:
+                s.create()
+                s.create_file('__init__.py')
+            resource2.create()
+        mover = create_move(project, resource, offset)  # Uses MoveGlobal
     else:
         mover = MoveModule(project, resource)
 
