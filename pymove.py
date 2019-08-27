@@ -84,17 +84,15 @@ def move(project_dir, src, dest, scoped_name=None, dry_run=False):
     else:
         if resource2.exists():
             raise RuntimeError('Destination %s already exists. Aborting.' % ('folder' if resource2.is_folder() else 'file'))
+        extra_changeset.execute()
         mover = MoveModule(project, resource)
 
     rope_changeset = mover.get_changes(resource2)
     if dry_run:
         print(str(rope_changeset.get_description()))
         print(str(extra_changeset.get_description()))
-        if scoped_name:
-            extra_changeset.cleanup()
+        extra_changeset.cleanup()
     else:
-        if not scoped_name:
-            extra_changeset.execute()
         project.do(rope_changeset)
 
 
