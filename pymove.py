@@ -83,7 +83,7 @@ def move(project_dir, src, dest, scoped_name=None, dry_run=False):
         mover = create_move(project, resource, offset)  # Uses MoveGlobal
     else:
         if resource2.exists():
-            raise RuntimeError('Destination %s already exists. Aborting.' % ('folder' if resource2.is_folder() else 'file'))
+            raise RuntimeError('Destination %s "%s" already exists. Aborting.' % ('folder' if resource2.is_folder() else 'file', resource2.real_path))
         extra_changeset.execute()
         mover = MoveModule(project, resource)
 
