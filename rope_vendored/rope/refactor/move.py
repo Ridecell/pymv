@@ -570,8 +570,19 @@ class MoveModule(object):
             imports = import_stmt.import_info.names_and_aliases
             new_imports = []
             for name, alias in imports:
+                # The moving module was wholly imported (from my_folder import module)
+                if name == self.old_name and name == dest.name[:-3] and not dest.is_folder():
+                    try:
+                        changed = True
+                        new_import = importutils.FromImport(
+                            libutils.modname(dest.parent), 0,
+                            [(self.old_name, alias)])
+                        module_imports.add_import(new_import)
+                    except Exception as ex:
+                        raise exceptions.RefactoringError(
+                            'Error attempting to refactor an module level import. ex: from module.module import module')
                 # The moving module was imported.
-                if name == self.old_name:
+                elif name == self.old_name:
                     changed = True
                     new_import = importutils.FromImport(
                         libutils.modname(dest), 0,
