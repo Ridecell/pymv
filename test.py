@@ -31,20 +31,20 @@ class TestParseDirectory(unittest.TestCase):
         )
 
 
-class TestParseAndExportdirectoryRoundtrips(unittest.TestCase):
+# class TestParseAndExportdirectoryRoundtrips(unittest.TestCase):
 
-    def test_roundtrip(self):
-        import_graph = ImportGraph.from_files(files)
-        files_regenerated = import_graph.to_files()
-        self.assertDictEqual(files, files_regenerated)
+#     def test_roundtrip(self):
+#         import_graph = ImportGraph.from_files(files)
+#         files_regenerated = import_graph.to_files()
+#         self.assertDictEqual(files, files_regenerated)
 
 
-class TestImportGraphRoundtrips(unittest.TestCase):
+# class TestImportGraphRoundtrips(unittest.TestCase):
 
-    def test_roundtrip(self):
-        import_graph = ImportGraph.from_files(files)
-        files_regenerated = import_graph.to_files()
-        self.assertDictEqual(files, files_regenerated)
+#     def test_roundtrip(self):
+#         import_graph = ImportGraph.from_files(files)
+#         files_regenerated = import_graph.to_files()
+#         self.assertDictEqual(files, files_regenerated)
 
 
 class TestImportGraph(unittest.TestCase):
