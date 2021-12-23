@@ -1,17 +1,7 @@
-#!/usr/bin/env python2
-"""
-pymv is currently built on top of python "rope" library. However, rope has been determined to be an abandoned project
-that is especially weak at Python3 support. pymv in its current state is therefore just a weak POC. The suggestion next
-step for this project is to upgrade it to use the maintained python parser pybaron and re-implement all the move logic
-from Rope.
-"""
-
 import os
 import sys
 import argparse
 import glob
-
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), 'rope_vendored'))
 
 import rope.base.project
 from rope.base import libutils
