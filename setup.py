@@ -11,11 +11,11 @@ with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name=NAME,
-    version='1.01',
+    version='1.02',
     description='CLI wrapper of rope\'s module moving functionality',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    author='John Miller',
+    author='Ridecell & contributors',
     author_email='john@johngm.com',
     python_requires='>=3.7.0',
     url='https://github.com/Ridecell/pymv',
