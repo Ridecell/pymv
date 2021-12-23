@@ -1,7 +1,9 @@
 # pymv
 
-CLI wrapper of rope's module moving functionality.
+CLI wrapper of rope's module moving functionality. Depends on a slightly forked (hacked up) version of Rope - https://github.com/Ridecell/rope.
 
+
+## Usage
 
 ```
 usage: pymv [-h] [--dry-run] [--project-root-directory PROJECT_DIR] source_path destination_path [scoped_global_variable]
@@ -21,4 +23,10 @@ optional arguments:
   --project-root-directory PROJECT_DIR
                         Root directory of the python project in which the files are being moved. This defines the scope for which
                         to search for affected import statements.
+```
+
+## Install
+
+```
+pip install git+https://github.com/Ridecell/rope pymv
 ```

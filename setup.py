@@ -11,7 +11,7 @@ with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name=NAME,
-    version='1.0',
+    version='1.01',
     description='CLI wrapper of rope\'s module moving functionality',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -24,7 +24,7 @@ setup(
         'console_scripts': ['pymv=pymv.main:main'],
     },
     install_requires=[
-        'git+https://github.com/Ridecell/rope'
+        # 'git+https://github.com/Ridecell/rope'
     ],
     extras_require={},
     include_package_data=True,
