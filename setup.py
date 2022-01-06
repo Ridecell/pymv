@@ -11,7 +11,7 @@ with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name=NAME,
-    version='1.3',
+    version='1.4',
     description='CLI wrapper of rope\'s module moving functionality',
     long_description=long_description,
     long_description_content_type='text/markdown',

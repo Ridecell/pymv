@@ -68,7 +68,7 @@ def move(project_dir, src, dest, scoped_name=None, dry_run=False):
     if scoped_name:
         if resource.is_folder():
             raise RuntimeError('If global scoped provided, resource must be a file')
-        offset = re.search(f'\\b{scoped_name}\\b', resource.read())
+        offset = re.search(f'\\b{scoped_name}\\b', resource.read()).span()[0]
         # TODO: Get the offset from the AST, don't try to parse python with regex
         extra_changeset.add_destination_file(resource2)
         extra_changeset.execute()
