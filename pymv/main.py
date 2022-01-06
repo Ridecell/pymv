@@ -1,7 +1,8 @@
-import os
-import sys
 import argparse
 import glob
+import os
+import re
+import sys
 
 import rope.base.project
 from rope.base import libutils
@@ -67,13 +68,14 @@ def move(project_dir, src, dest, scoped_name=None, dry_run=False):
     if scoped_name:
         if resource.is_folder():
             raise RuntimeError('If global scoped provided, resource must be a file')
-        offset = resource.read().index('%s' % scoped_name)
+        offset = re.search(f'\\b{scoped_name}\\b', resource.read())
+        # TODO: Get the offset from the AST, don't try to parse python with regex
         extra_changeset.add_destination_file(resource2)
         extra_changeset.execute()
         mover = create_move(project, resource, offset)  # Uses MoveGlobal
     else:
         if resource2.exists():
-            raise RuntimeError('Destination %s already exists. Aborting.' % ('folder' if resource2.is_folder() else 'file'))
+            raise RuntimeError(f'Destination {"folder" if resource2.is_folder() else "file"} already exists. Aborting.')
         extra_changeset.execute()
         mover = MoveModule(project, resource)
 
