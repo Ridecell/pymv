@@ -1,6 +1,8 @@
 # pymv
 
-CLI wrapper of rope's module moving functionality. Depends on a slightly forked (hacked up) version of Rope - https://github.com/Ridecell/rope.
+pymv is a tool to move or rename python source code files from the command line. Unlike the normal `mv` command, pymv is python-aware and will also fix up all references to the moved python file, such as import statements, within the rest of the project.
+
+pymv is implemented as a CLI wrapper of rope's module moving functionality. Depends on a slightly forked (hacked up) version of Rope - https://github.com/Ridecell/rope.
 
 
 ## Usage
